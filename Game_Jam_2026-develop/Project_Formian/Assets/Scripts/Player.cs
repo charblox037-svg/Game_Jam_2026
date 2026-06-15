@@ -46,6 +46,10 @@ namespace GlosCol
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 }
             }
+            if (Input.GetMouseButtonDown(0)) // FIX: Use Input.GetMouseButtonDown for mouse button press
+            {
+                animator.Play("Player_Attack");
+            }
 
 
             SetAnimation(moveInput);
@@ -68,14 +72,20 @@ namespace GlosCol
                 {
                     animator.Play("Player_Idle");
                 }
+                else if (moveInput > 0)
+                {
+                    animator.Play("Player_Run");
+                    spriteRenderer.flipX = false; // Flip the sprite to face left
+                }
                 else
                 {
                     animator.Play("Player_Run");
+                    spriteRenderer.flipX = true; // Flip the sprite to face right
                 }
             }
             else
             {
-                if (rb.linearVelocityY > 0)
+                if (rb.linearVelocity.y > 0)
                 {
                     animator.Play("Player_Jump");
                 }
@@ -84,7 +94,6 @@ namespace GlosCol
                     animator.Play("Player_Fall");
                 }
             }
-
         }
         private void OnCollisionEnter2D(Collision2D collision)
         {
