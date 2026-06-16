@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class WalkerRedAnt : MonoBehaviour
 {
-    public static int EnemyHealth = 100; // Health of the WalkerRedAnt
+    public int EnemyHealth = 100; // Health of the WalkerRedAnt
     public float jumpForce = 10f; // Force applied when the WalkerRedAnt takes damage
 
     private Rigidbody2D rb;
     private bool isGrounded;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+
+    public float speed = 2f; // Speed of the Enemy
+    public Transform[] points; // Points between which the Enemy will move
+    private int i; // Index to track the current point
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -20,22 +25,19 @@ public class WalkerRedAnt : MonoBehaviour
 
     void Update()
     {
-
-    }
-    private void SetAnimation(float moveInput)
-    {
-        if (isGrounded)
+        //Check if the platform has reached the current target point
+        if (Vector2.Distance(transform.position, points[i].position) < 0.25f)
         {
-            if (moveInput == 0)
+            i++; // Move to the next point
+
+            if (i == points.Length)
             {
-                animator.Play("WalkerRedAnt_Idle");
-            }
-            else
-            {
-                animator.Play("WalkerRedAnt_Run");
-                spriteRenderer.flipX = moveInput < 0; // Flip the sprite based on movement direction
+                i = 0; // Loop back to the first point
             }
         }
+        transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime); // Move towards the target point
+
+        spriteRenderer.flipX = points[i].position.x < transform.position.x; // Flip the sprite based on movement direction
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
