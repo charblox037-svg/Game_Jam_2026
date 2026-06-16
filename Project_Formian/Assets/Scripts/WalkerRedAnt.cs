@@ -38,7 +38,10 @@ public class WalkerRedAnt : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime); // Move towards the target point
 
         spriteRenderer.flipX = points[i].position.x < transform.position.x; // Flip the sprite based on movement direction
+
+        animator.Play("WalkerRedAnt_Run"); // Play the walking animation
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

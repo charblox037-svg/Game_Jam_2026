@@ -147,7 +147,7 @@ namespace GlosCol
 
         private void Die()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Level_17"); // Reload the current scene (you can change this to a game over screen if you have one)
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu"); // Reload the current scene (you can change this to a game over screen if you have one)
         }
     }
 }
