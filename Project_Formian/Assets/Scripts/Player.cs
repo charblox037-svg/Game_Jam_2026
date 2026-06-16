@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 namespace GlosCol
 {
@@ -16,6 +17,11 @@ namespace GlosCol
         public float groundCheckRadius = 0.2f;
         public LayerMask groundLayer;
 
+        private GameObject attackArea = default; // Reference to the attack area GameObject
+        private bool attacking = false; // Flag to indicate if the player is currently attacking
+        
+        private float timeToAttack = 0.25f; // Time duration for the attack
+        private float timer = 0f; // Timer to track the attack duration
 
         private Rigidbody2D rb;
         private bool isGrounded;
@@ -28,6 +34,8 @@ namespace GlosCol
             rb = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             spriteRenderer = GetComponent<SpriteRenderer>();
+
+            attackArea = transform.GetChild(0).gameObject; // Assuming the attack area is the first child of the player
         }
 
         void Update()
@@ -46,8 +54,20 @@ namespace GlosCol
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 }
             }
-
-
+            if(Input.GetKeyDown(KeyCode.F))
+            {
+                Attack();
+            }
+            if(attacking)
+            {                 
+                timer += Time.deltaTime;
+                if(timer >= timeToAttack)
+                {
+                    attacking = false;
+                    attackArea.SetActive(attacking); // Deactivate the attack area after the attack duration
+                    timer = 0f; // Reset the timer
+                }
+            }
             SetAnimation(moveInput);
             slider.value = health; // Update the slider value to reflect the current health
             healthText.text = "Health: " + health; // Update the health text display
@@ -71,6 +91,7 @@ namespace GlosCol
                 else
                 {
                     animator.Play("Player_Run");
+                    spriteRenderer.flipX = moveInput < 0; // Flip the sprite based on movement direction
                 }
             }
             else
@@ -84,6 +105,15 @@ namespace GlosCol
                     animator.Play("Player_Fall");
                 }
             }
+
+        }
+
+        private void Attack()
+        {            
+            StopAllCoroutines(); // Stop any ongoing coroutines to prevent overlapping attacks
+            animator.Play("Player_Attack");
+            attacking = true;
+            attackArea.SetActive(true); // Activate the attack area
 
         }
         private void OnCollisionEnter2D(Collision2D collision)
