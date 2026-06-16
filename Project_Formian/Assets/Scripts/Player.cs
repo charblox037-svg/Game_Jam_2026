@@ -110,7 +110,6 @@ namespace GlosCol
 
         private void Attack()
         {            
-            StopAllCoroutines(); // Stop any ongoing coroutines to prevent overlapping attacks
             animator.Play("Player_Attack");
             attacking = true;
             attackArea.SetActive(true); // Activate the attack area
