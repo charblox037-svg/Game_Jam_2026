@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class DropPoint : MonoBehaviour
 {
+
+    private object dropPointObject; // Reference to the drop point object
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
